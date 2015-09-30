@@ -41,12 +41,12 @@ public class IdentificacionImagenes {
         final int WITH=data.getWidth(), HEIGHT=data.getHeight();
 
         System.out.println("Se inicializa la matriz");
-        int[][] image = new int[WITH][HEIGHT];
+        int[][] image = new int[HEIGHT][WITH];
 
         System.out.println("Se carga la matriz con lo valores en escala de grises");
-        for (int i = 0; i < WITH; i++) {
-            for (int j = 0; j < HEIGHT; j++) {
-                image[i][j] = (data.getSample(i, j, 0));
+        for (int i = 0; i < HEIGHT; i++) {
+            for (int j = 0; j < WITH; j++) {
+                image[i][j] = (data.getSample(j, i, 0));
             }
         }
         
