@@ -28,19 +28,20 @@ public class IdentificacionImagenes {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
+
         Scanner scanner = new Scanner(System.in);
         System.out.println("Por favor intriduza la ruta de la imagen (con slash al final)");
         final String basePath = scanner.nextLine();
-        
+
         System.out.println("Por favor intriduza el nombre de la imagen (sin formato)");
         final String NAME = scanner.nextLine();
-        
+
         System.out.println("Por favor intriduza el formato de la imagen (jpg, png, etc)");
         final String FORMATO = scanner.nextLine();
-        
-        String imageSource = NAME+"."+FORMATO;
-        File archivoSalidaV = new File("V-"+imageSource);
+
+        String imageSource = NAME + "." + FORMATO;
+        File archivoSalidaV = new File(basePath+"V-" + imageSource);
+        File archivoSalidaH = new File(basePath+"H-" + imageSource);
 
         BufferedImage bufferedImage = null;
         System.out.println("Se lee la imagen...");
@@ -83,6 +84,26 @@ public class IdentificacionImagenes {
             Logger.getLogger(IdentificacionImagenes.class.getName()).log(Level.SEVERE, null, ex);
         }
 
+        System.out.println("Aplicamos filtro vertical, obtenemos bordes horizontales");
+        int[][] bordesH = new int[HEIGHT][WITH];
+        for (int i = 0; i < HEIGHT; i++) {
+            for (int j = 0; j < WITH; j++) {
+                bordesH[i][j] = image[i][j] - image[i + 1][j];
+            }
+        }
+
+        BufferedImage imageH = new BufferedImage(WITH, HEIGHT, BufferedImage.TYPE_BYTE_GRAY);
+        for (int y = 0; y < HEIGHT; y++) {
+            for (int x = 0; x < WITH; x++) {
+                int value = bordesH[y][x] << 16 | bordesH[y][x] << 8 | bordesH[y][x];
+                imageH.setRGB(x, y, value);
+            }
+        }
+        try {
+            ImageIO.write(imageH, FORMATO, archivoSalidaH);
+        } catch (IOException ex) {
+            Logger.getLogger(IdentificacionImagenes.class.getName()).log(Level.SEVERE, null, ex);
+        }
         System.out.println("Finalizo");
     }
 
