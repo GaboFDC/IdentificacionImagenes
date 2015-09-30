@@ -41,7 +41,7 @@ public class IdentificacionImagenes {
         final int WITH=data.getWidth(), HEIGHT=data.getHeight();
 
         System.out.println("Se inicializa la matriz");
-        int[][] image = new int[HEIGHT][WITH];
+        int[][] image = new int[HEIGHT+1][WITH+1];
 
         System.out.println("Se carga la matriz con lo valores en escala de grises");
         for (int i = 0; i < HEIGHT; i++) {
@@ -50,6 +50,15 @@ public class IdentificacionImagenes {
             }
         }
         
+        System.out.println("Aplicamos filtro horizontal, obtenemos bordes verticales");
+        int[][] bordesV= new int[HEIGHT][WITH];
+        for (int i = 0; i < HEIGHT; i++) {
+            for (int j = 0; j < WITH; j++) {
+                bordesV[i][j]=image[i][j]+image[i][j+1];
+            }
+        }
+        
+        System.out.println("Finalizo");
     }
 
 }
