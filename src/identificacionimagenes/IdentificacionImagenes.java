@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
@@ -27,9 +28,18 @@ public class IdentificacionImagenes {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        String basePath = "/home/gabo/Pictures/";
-        final String FORMATO = "jpg";
-        String imageSource = "IA."+FORMATO;
+        
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Por favor intriduza la ruta de la imagen (con slash al final)");
+        final String basePath = scanner.nextLine();
+        
+        System.out.println("Por favor intriduza el nombre de la imagen (sin formato)");
+        final String NAME = scanner.nextLine();
+        
+        System.out.println("Por favor intriduza el formato de la imagen (jpg, png, etc)");
+        final String FORMATO = scanner.nextLine();
+        
+        String imageSource = NAME+"."+FORMATO;
         File archivoSalidaV = new File("V-"+imageSource);
 
         BufferedImage bufferedImage = null;
