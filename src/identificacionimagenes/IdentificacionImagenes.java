@@ -28,7 +28,9 @@ public class IdentificacionImagenes {
      */
     public static void main(String[] args) {
         String basePath = "/home/gabo/Pictures/";
-        String imageSource = "IA.jpg";
+        final String FORMATO = "jpg";
+        String imageSource = "IA."+FORMATO;
+        File archivoSalidaV = new File("V-"+imageSource);
 
         BufferedImage bufferedImage = null;
         System.out.println("Se lee la imagen...");
@@ -38,10 +40,10 @@ public class IdentificacionImagenes {
             Logger.getLogger(IdentificacionImagenes.class.getName()).log(Level.SEVERE, null, ex);
         }
         Raster data = bufferedImage.getData();
-        final int WITH=data.getWidth(), HEIGHT=data.getHeight();
+        final int WITH = data.getWidth(), HEIGHT = data.getHeight();
 
         System.out.println("Se inicializa la matriz");
-        int[][] image = new int[HEIGHT+1][WITH+1];
+        int[][] image = new int[HEIGHT + 1][WITH + 1];
 
         System.out.println("Se carga la matriz con lo valores en escala de grises");
         for (int i = 0; i < HEIGHT; i++) {
@@ -49,15 +51,28 @@ public class IdentificacionImagenes {
                 image[i][j] = (data.getSample(j, i, 0));
             }
         }
-        
+
         System.out.println("Aplicamos filtro horizontal, obtenemos bordes verticales");
-        int[][] bordesV= new int[HEIGHT][WITH];
+        int[][] bordesV = new int[HEIGHT][WITH];
         for (int i = 0; i < HEIGHT; i++) {
             for (int j = 0; j < WITH; j++) {
-                bordesV[i][j]=image[i][j]+image[i][j+1];
+                bordesV[i][j] = image[i][j] - image[i][j + 1];
             }
         }
-        
+
+        BufferedImage imageV = new BufferedImage(WITH, HEIGHT, BufferedImage.TYPE_BYTE_GRAY);
+        for (int y = 0; y < HEIGHT; y++) {
+            for (int x = 0; x < WITH; x++) {
+                int value = bordesV[y][x] << 16 | bordesV[y][x] << 8 | bordesV[y][x];
+                imageV.setRGB(x, y, value);
+            }
+        }
+        try {
+            ImageIO.write(imageV, FORMATO, archivoSalidaV);
+        } catch (IOException ex) {
+            Logger.getLogger(IdentificacionImagenes.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         System.out.println("Finalizo");
     }
 
