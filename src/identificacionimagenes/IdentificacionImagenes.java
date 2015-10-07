@@ -24,6 +24,134 @@ import javax.imageio.ImageIO;
  */
 public class IdentificacionImagenes {
 
+private final int[][] A = {{-1,  1, -1},
+						   { 1,  1,  1},
+						   { 1, -1,  1}};
+
+private final int[][] B = {{ 1,  1, -1},
+						   { 1,  1,  1},
+						   { 1,  1,  1}};
+
+private final int[][] C = {{ 1,  1,  1},
+						   { 1, -1, -1},
+						   { 1,  1,  1}};
+
+private final int[][] D = {{ 1,  1, -1},
+						   { 1, -1,  1},
+						   { 1,  1, -1}};
+
+private final int[][] E = {{ 1,  1,  1},
+						   { 1,  1, -1},
+						   { 1,  1,  1}};
+
+private final int[][] F = {{ 1,  1,  1},
+						   { 1,  1, -1},
+						   { 1, -1, -1}};
+
+private final int[][] G = {{ 1,  1, -1},
+						   { 1, -1,  1},
+						   { 1,  1,  1}};
+
+private final int[][] H = {{ 1, -1,  1},
+						   { 1,  1,  1},
+						   { 1, -1,  1}};
+
+private final int[][] I = {{ 1,  1,  1},
+						   {-1,  1, -1},
+						   { 1,  1,  1}};
+
+private final int[][] J = {{-1, -1,  1},
+						   { 1, -1,  1},
+						   { 1,  1,  1}};
+
+private final int[][] K = {{ 1, -1,  1},
+						   { 1,  1, -1},
+						   { 1, -1,  1}};
+
+private final int[][] L = {{ 1, -1, -1},
+						   { 1, -1, -1},
+						   { 1,  1, -1}};
+
+private final int[][] M = {{ 1,  1,  1},
+						   { 1,  1,  1},
+						   { 1, -1,  1}};
+
+private final int[][] N = {{ 1,  1,  1},
+						   { 1, -1,  1},
+						   { 1, -1,  1}};
+
+private final int[][] O = {{ 1,  1,  1},
+						   { 1, -1,  1},
+						   { 1,  1,  1}};
+
+private final int[][] P = {{ 1,  1,  1},
+						   { 1,  1,  1},
+						   { 1, -1, -1}};
+
+private final int[][] Q = {{ 1,  1,  1},
+						   { 1,  1,  1},
+						   {-1, -1,  1}};
+
+private final int[][] R = {{ 1,  1,  1},
+						   { 1, -1, -1},
+						   { 1, -1, -1}};
+
+private final int[][] S = {{-1,  1,  1},
+						   {-1,  1, -1},
+						   { 1,  1, -1}};
+
+private final int[][] T = {{ 1,  1,  1},
+						   {-1,  1, -1},
+						   {-1,  1, -1}};
+
+private final int[][] U = {{ 1, -1,  1},
+						   { 1, -1,  1},
+						   { 1,  1,  1}};
+
+private final int[][] V = {{ 1, -1,  1},
+						   { 1, -1,  1},
+						   {-1,  1, -1}};
+
+private final int[][] W = {{ 1, -1,  1},
+						   { 1,  1,  1},
+						   { 1,  1,  1}};
+
+private final int[][] X = {{ 1, -1,  1},
+						   {-1,  1, -1},
+						   { 1, -1,  1}};
+
+private final int[][] Y = {{ 1, -1,  1},
+						   {-1,  1, -1},
+						   {-1,  1, -1}};
+
+private final int[][] Z = {{ 1,  1, -1},
+						   {-1,  1, -1},
+						   {-1,  1,  1}};
+
+private final int[][] N1 = {{ 1,  1, -1},
+						    {-1,  1, -1},
+						    { 1,  1,  1}};
+
+private final int[][] N3 = {{ 1,  1,  1},
+						    {-1,  1,  1},
+						    { 1,  1,  1}};
+
+private final int[][] N4 = {{ 1, -1,  1},
+						    { 1,  1,  1},
+						    {-1, -1,  1}};
+
+private final int[][] N6 = {{ 1, -1, -1},
+					 	    { 1,  1,  1},
+					 	    { 1,  1,  1}};
+
+private final int[][] N7 = {{ 1,  1,  1},
+					 	    {-1, -1,  1},
+					 	    {-1, -1,  1}};
+
+private final int[][] N8 = {{-1,  1,  1},
+					 	    { 1,  1,  1},
+ 						    { 1,  1,  1}};
+
 	/**
 	 * @param args the command line arguments
 	 */
@@ -39,6 +167,9 @@ public class IdentificacionImagenes {
 		System.out.println("Por favor intriduza el formato de la imagen (jpg, png, etc)");
 		final String FORMATO = scanner.nextLine();
 
+		System.out.println("Por favor intriduza el margen");
+		final int margen = scanner.nextInt();
+
 		String imageSource = NAME + "." + FORMATO;
 
 		BufferedImage bufferedImage = null;
@@ -52,7 +183,7 @@ public class IdentificacionImagenes {
 		final int WITH = data.getWidth(), HEIGHT = data.getHeight();
 
 		System.out.println("Se inicializa la matriz");
-		int[][] image = new int[HEIGHT + 10][WITH + 10];
+		int[][] image = new int[HEIGHT + margen][WITH + margen];
 
 		System.out.println("Se carga la matriz con lo valores en escala de grises");
 		for (int i = 0; i < HEIGHT; i++) {
@@ -64,12 +195,22 @@ public class IdentificacionImagenes {
 		saveImage(image, HEIGHT, WITH, FORMATO, new File(basePath + "G-" + imageSource));
 
 		System.out.println("Aplicamos filtro horizontal, obtenemos bordes verticales");
-		int[][] imagenFiltrada = filtro(image, "H", 10, HEIGHT, WITH);
-		saveImage(imagenFiltrada, HEIGHT, WITH, FORMATO, new File(basePath + "H-" + imageSource));
+		int[][] imagenH = filtro(image, "H", margen, HEIGHT, WITH);
+		saveImage(imagenH, HEIGHT, WITH, FORMATO, new File(basePath + "H-" + imageSource));
 
 		System.out.println("Aplicamos filtro vertical, obtenemos bordes horizontales");
-		imagenFiltrada = filtro(image, "V", 10, HEIGHT, WITH);
-		saveImage(imagenFiltrada, HEIGHT, WITH, FORMATO, new File(basePath + "V-" + imageSource));
+		int[][] imagenV = filtro(image, "V", margen, HEIGHT, WITH);
+		saveImage(imagenV, HEIGHT, WITH, FORMATO, new File(basePath + "V-" + imageSource));
+
+		System.out.println("combinamos las imagenes");
+		int[][] borders = combine(imagenH, imagenV, HEIGHT, WITH);
+		saveImage(borders, HEIGHT, WITH, FORMATO, new File(basePath + "B-" + imageSource));
+
+		int[][] bordersBN = GrayscaleToBN(borders, HEIGHT, WITH);
+		saveImage(bordersBN, HEIGHT, WITH, FORMATO, new File(basePath + "BN-" + imageSource));
+
+		System.out.println("Pasamos a letras");
+		int[][] letters = imageToLetters(bordersBN, HEIGHT, WITH);
 
 		System.out.println("Finalizo");
 	}
@@ -114,4 +255,37 @@ public class IdentificacionImagenes {
 		}
 	}
 
+	private static int[][] combine(int[][] imagenH, int[][] imagenV, int HEIGHT, int WITH) {
+		int[][] combined = new int[HEIGHT][WITH];
+		for (int i = 0; i < HEIGHT; i++) {
+			for (int j = 0; j < WITH; j++) {
+				combined[i][j] = imagenH[i][j] + imagenV[i][j];
+			}
+		}
+		return combined;
+	}
+
+	private static int[][] GrayscaleToBN(int[][] image, int HEIGHT, int WITH) {
+		int[][] blackandwhite = new int[HEIGHT][WITH];
+		for (int i = 0; i < HEIGHT; i++) {
+			for (int j = 0; j < WITH; j++) {
+				if (image[i][j] < 50) {
+					blackandwhite[i][j] = -1;
+				} else {
+					blackandwhite[i][j] = 1;
+				}
+			}
+		}
+		return blackandwhite;
+	}
+
+	private static int[][] imageToLetters(int[][] image, int HEIGHT, int WITH) {
+		int[][] combined = new int[HEIGHT][WITH];
+		for (int i = 0; i < HEIGHT; i++) {
+			for (int j = 0; j < WITH; j++) {
+				
+			}
+		}
+		return combined;
+	}
 }
