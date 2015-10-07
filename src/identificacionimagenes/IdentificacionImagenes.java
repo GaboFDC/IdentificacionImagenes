@@ -40,8 +40,6 @@ public class IdentificacionImagenes {
         final String FORMATO = scanner.nextLine();
 
         String imageSource = NAME + "." + FORMATO;
-        File archivoSalidaV = new File(basePath+"V-" + imageSource);
-        File archivoSalidaH = new File(basePath+"H-" + imageSource);
 
         BufferedImage bufferedImage = null;
         System.out.println("Se lee la imagen...");
@@ -62,49 +60,57 @@ public class IdentificacionImagenes {
                 image[i][j] = (data.getSample(j, i, 0));
             }
         }
+		
+		saveImage(image, HEIGHT, WITH, FORMATO, new File(basePath+"G-" + imageSource));
+		
+		int[][] imagenFiltrada = filtro(image, "H", HEIGHT, WITH);
+		saveImage(imagenFiltrada, HEIGHT, WITH,FORMATO,new File(basePath+"H-" + imageSource));
+		
+		imagenFiltrada = filtro(image, "V", HEIGHT, WITH);
+		saveImage(imagenFiltrada, HEIGHT, WITH,FORMATO,new File(basePath+"V-" + imageSource));
 
-        System.out.println("Aplicamos filtro horizontal, obtenemos bordes verticales");
-        int[][] bordesV = new int[HEIGHT][WITH];
-        for (int i = 0; i < HEIGHT; i++) {
-            for (int j = 0; j < WITH; j++) {
-                bordesV[i][j] = image[i][j] - image[i][j + 1];
-            }
-        }
-
-        BufferedImage imageV = new BufferedImage(WITH, HEIGHT, BufferedImage.TYPE_BYTE_GRAY);
-        for (int y = 0; y < HEIGHT; y++) {
-            for (int x = 0; x < WITH; x++) {
-                int value = bordesV[y][x] << 16 | bordesV[y][x] << 8 | bordesV[y][x];
-                imageV.setRGB(x, y, value);
-            }
-        }
-        try {
-            ImageIO.write(imageV, FORMATO, archivoSalidaV);
-        } catch (IOException ex) {
-            Logger.getLogger(IdentificacionImagenes.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        System.out.println("Aplicamos filtro vertical, obtenemos bordes horizontales");
-        int[][] bordesH = new int[HEIGHT][WITH];
-        for (int i = 0; i < HEIGHT; i++) {
-            for (int j = 0; j < WITH; j++) {
-                bordesH[i][j] = image[i][j] - image[i + 1][j];
-            }
-        }
-
-        BufferedImage imageH = new BufferedImage(WITH, HEIGHT, BufferedImage.TYPE_BYTE_GRAY);
-        for (int y = 0; y < HEIGHT; y++) {
-            for (int x = 0; x < WITH; x++) {
-                int value = bordesH[y][x] << 16 | bordesH[y][x] << 8 | bordesH[y][x];
-                imageH.setRGB(x, y, value);
-            }
-        }
-        try {
-            ImageIO.write(imageH, FORMATO, archivoSalidaH);
-        } catch (IOException ex) {
-            Logger.getLogger(IdentificacionImagenes.class.getName()).log(Level.SEVERE, null, ex);
-        }
         System.out.println("Finalizo");
     }
+
+	private static int[][] filtro(int[][] image, String tipo, int HEIGHT, int WITH) {
+		int[][] filtro = new int[HEIGHT][WITH];
+		switch (tipo) {
+			case "H":
+				System.out.println("Aplicamos filtro horizontal, obtenemos bordes verticales");
+				for (int i = 0; i < HEIGHT; i++) {
+					for (int j = 0; j < WITH; j++) {
+						filtro[i][j] = image[i][j] - image[i][j + 1];
+					}
+				}
+				break;
+			case "V":
+				System.out.println("Aplicamos filtro vertical, obtenemos bordes horizontales");
+				for (int i = 0; i < HEIGHT; i++) {
+					for (int j = 0; j < WITH; j++) {
+						filtro[i][j] = image[i][j] - image[i + 1][j];
+					}
+				}
+				break;
+			default:
+				System.out.println("Filtro invalido");
+				break;
+		}
+		return filtro;
+	}
+
+	private static void saveImage(int[][] imagenFiltrada, int HEIGHT, int WITH, String FORMATO,File archivoSalida) {
+        BufferedImage image = new BufferedImage(WITH, HEIGHT, BufferedImage.TYPE_BYTE_GRAY);
+        for (int y = 0; y < HEIGHT; y++) {
+            for (int x = 0; x < WITH; x++) {
+                int value = imagenFiltrada[y][x] << 16 | imagenFiltrada[y][x] << 8 | imagenFiltrada[y][x];
+                image.setRGB(x, y, value);
+            }
+        }
+        try {
+            ImageIO.write(image, FORMATO, archivoSalida);
+        } catch (IOException ex) {
+            Logger.getLogger(IdentificacionImagenes.class.getName()).log(Level.SEVERE, null, ex);
+        }
+	}
 
 }
