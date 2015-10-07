@@ -52,7 +52,7 @@ public class IdentificacionImagenes {
 		final int WITH = data.getWidth(), HEIGHT = data.getHeight();
 
 		System.out.println("Se inicializa la matriz");
-		int[][] image = new int[HEIGHT + 1][WITH + 1];
+		int[][] image = new int[HEIGHT + 10][WITH + 10];
 
 		System.out.println("Se carga la matriz con lo valores en escala de grises");
 		for (int i = 0; i < HEIGHT; i++) {
@@ -63,45 +63,38 @@ public class IdentificacionImagenes {
 
 		saveImage(image, HEIGHT, WITH, FORMATO, new File(basePath + "G-" + imageSource));
 
-		int[][] imagenFiltrada = filtro(image, "H", HEIGHT, WITH);
+		System.out.println("Aplicamos filtro horizontal, obtenemos bordes verticales");
+		int[][] imagenFiltrada = filtro(image, "H", 10, HEIGHT, WITH);
 		saveImage(imagenFiltrada, HEIGHT, WITH, FORMATO, new File(basePath + "H-" + imageSource));
 
-		imagenFiltrada = filtro(image, "V", HEIGHT, WITH);
+		System.out.println("Aplicamos filtro vertical, obtenemos bordes horizontales");
+		imagenFiltrada = filtro(image, "V", 10, HEIGHT, WITH);
 		saveImage(imagenFiltrada, HEIGHT, WITH, FORMATO, new File(basePath + "V-" + imageSource));
 
 		System.out.println("Finalizo");
 	}
 
-	private static int[][] filtro(int[][] image, String tipo, int HEIGHT, int WITH) {
+	private static int[][] filtro(int[][] image, String tipo, int margen, int HEIGHT, int WITH) {
 		int[][] filtro = new int[HEIGHT][WITH];
-		switch (tipo) {
-			case "H":
-				System.out.println("Aplicamos filtro horizontal, obtenemos bordes verticales");
-				for (int i = 0; i < HEIGHT; i++) {
-					for (int j = 0; j < WITH; j++) {
-						int value = image[i][j] - image[i][j + 1];
-						if (value < 0) {
-							value = 0;
-						}
-						filtro[i][j] = value;
-					}
+		for (int i = 0; i < HEIGHT; i++) {
+			for (int j = 0; j < WITH; j++) {
+				int value = 0;
+				switch (tipo) {
+					case "H":
+						value = image[i][j] - image[i][j + margen];
+						break;
+					case "V":
+						value = image[i][j] - image[i + margen][j];
+						break;
+					default:
+						System.out.println("Filtro invalido");
+						break;
 				}
-				break;
-			case "V":
-				System.out.println("Aplicamos filtro vertical, obtenemos bordes horizontales");
-				for (int i = 0; i < HEIGHT; i++) {
-					for (int j = 0; j < WITH; j++) {
-						int value = image[i][j] - image[i + 1][j];
-						if (value < 0) {
-							value = 0;
-						}
-						filtro[i][j] = value;
-					}
+				if (value < 0) {
+					value = value * -1;
 				}
-				break;
-			default:
-				System.out.println("Filtro invalido");
-				break;
+				filtro[i][j] = value;
+			}
 		}
 		return filtro;
 	}
